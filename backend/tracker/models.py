@@ -28,4 +28,20 @@ class MacroPlan(models.Model):
   target_proteins = models.DecimalField(max_digits=6, decimal_places=2)
   target_fats = models.DecimalField(max_digits=6, decimal_places=2)
 
+  start_date = models.DateTimeField(default=timezone.now, )
+
   user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+
+
+class DailyFoodLog(models.Model):
+  user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+  created_at = models.DateTimeField(auto_now=True)
+
+  class Meta:
+    unique_together = ("user", "date")
+
+
+class ConsumedItem(models.Model):
+  log = models.ForeignKey(DailyFoodLog, on_delete=models.CASCADE)
+  quantity = models.DecimalField(max_digits=7, decimal_places=2) #To be able to use fractions and not just integers
+  
