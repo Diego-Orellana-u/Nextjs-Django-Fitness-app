@@ -41,7 +41,22 @@ class DailyFoodLog(models.Model):
     unique_together = ("user", "date")
 
 
+UNITS = [
+  ("g", "Grams"),
+  ("ml", "Milliliters"),
+  ("piece", "Piece"),
+  ("cup", "Cup"),
+  ("tbsp", "Tablespoon"),
+]
+
+MEAL_TIMES = [
+  ("B", "Breakfast"),
+  ("L", "Lunch"),
+  ("D", "Dinner"),
+  ("S", "Snack")
+]
 class ConsumedItem(models.Model):
   log = models.ForeignKey(DailyFoodLog, on_delete=models.CASCADE)
   quantity = models.DecimalField(max_digits=7, decimal_places=2) #To be able to use fractions and not just integers
-  
+  unit = models.CharField(max_length=10, choices=UNITS)
+  time_of_day = models.CharField(max_length=10, choices=MEAL_TIMES)
