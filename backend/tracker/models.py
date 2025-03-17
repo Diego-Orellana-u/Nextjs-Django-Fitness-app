@@ -35,7 +35,7 @@ class MacroPlan(models.Model):
 
 class DailyFoodLog(models.Model):
   user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-  created_at = models.DateTimeField(auto_now=True)
+  date  = models.DateField()
 
   class Meta:
     unique_together = ("user", "date")
@@ -56,7 +56,13 @@ MEAL_TIMES = [
   ("S", "Snack")
 ]
 class ConsumedItem(models.Model):
+  #FoodItem
   log = models.ForeignKey(DailyFoodLog, on_delete=models.CASCADE)
-  quantity = models.DecimalField(max_digits=7, decimal_places=2) #To be able to use fractions and not just integers
+  quantity = models.DecimalField(max_digits=7, decimal_places=2) #To use fractions and not just integers
   unit = models.CharField(max_length=10, choices=UNITS)
   time_of_day = models.CharField(max_length=10, choices=MEAL_TIMES)
+
+
+class MealPlan(models.Model):
+  name = models.CharField(max_length=10)
+  user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
