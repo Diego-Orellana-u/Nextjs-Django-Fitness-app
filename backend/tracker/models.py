@@ -66,3 +66,9 @@ class ConsumedItem(models.Model):
 class MealPlan(models.Model):
   name = models.CharField(max_length=10)
   user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+  time_of_day = models.CharField(max_length=10, choices=MEAL_TIMES)
+
+class MealItem(models.Model):
+  meal_plan = models.ForeignKey(MealPlan, on_delete=models.CASCADE)
+  quantity = models.DecimalField(max_digits=7, decimal_places=2)
+  unit = models.CharField(max_length=10, choices=UNITS)
