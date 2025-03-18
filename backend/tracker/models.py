@@ -21,6 +21,18 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
     
+
+UNITS = [
+  ("g", "Grams"),
+  ("ml", "Milliliters"),
+  ("piece", "Piece"),
+  ("cup", "Cup"),
+  ("tbsp", "Tablespoon"),
+]
+class FoodItem(models.Model):
+  serving_size = models.DecimalField(max_digits=7, decimal_places=2)
+  serving_unit = models.CharField(max_length=7, choices=UNITS)
+
 class MacroPlan(models.Model):
   name = models.CharField(max_length=255)
   target_calories = models.DecimalField(max_digits=6, decimal_places=2)
@@ -41,14 +53,6 @@ class DailyFoodLog(models.Model):
     unique_together = ("user", "date")
 
 
-UNITS = [
-  ("g", "Grams"),
-  ("ml", "Milliliters"),
-  ("piece", "Piece"),
-  ("cup", "Cup"),
-  ("tbsp", "Tablespoon"),
-]
-
 MEAL_TIMES = [
   ("B", "Breakfast"),
   ("L", "Lunch"),
@@ -58,10 +62,10 @@ MEAL_TIMES = [
 class ConsumedItem(models.Model):
   #FoodItem
   log = models.ForeignKey(DailyFoodLog, on_delete=models.CASCADE)
-  quantity = models.DecimalField(max_digits=7, decimal_places=2) #To use fractions and not just integers
-  unit = models.CharField(max_length=10, choices=UNITS)
+  food_item = models.ForeignKey(FoodItem, on_delete=models.PROTECT)
+  serving_quantity = models.DecimalField(max_digits=7, decimal_places=2) #To use fractions and not just integers
+  serving_unit = models.CharField(max_length=10, choices=UNITS)
   time_of_day = models.CharField(max_length=10, choices=MEAL_TIMES)
-
 
 class MealPlan(models.Model):
   name = models.CharField(max_length=10)
@@ -70,5 +74,6 @@ class MealPlan(models.Model):
 
 class MealItem(models.Model):
   meal_plan = models.ForeignKey(MealPlan, on_delete=models.CASCADE)
-  quantity = models.DecimalField(max_digits=7, decimal_places=2)
-  unit = models.CharField(max_length=10, choices=UNITS)
+  food_item = models.ForeignKey(FoodItem, on_delete=models.PROTECT)
+  serving_quantity = models.DecimalField(max_digits=7, decimal_places=2)
+  serving_unit = models.CharField(max_length=10, choices=UNITS)
