@@ -10,7 +10,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
-    created_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     USERNAME_FIELD = "email"
@@ -29,9 +29,19 @@ UNITS = [
   ("cup", "Cup"),
   ("tbsp", "Tablespoon"),
 ]
+
 class FoodItem(models.Model):
-  serving_size = models.DecimalField(max_digits=7, decimal_places=2)
-  serving_unit = models.CharField(max_length=7, choices=UNITS)
+  name = models.CharField(max_length=200, db_index=True, unique=True)
+  calories_per_100g = models.DecimalField(max_digits=7, decimal_places=2, help_text="Calories per 100g")
+  protein_per_100g = models.DecimalField(max_digits=7, decimal_places=2, help_text="Protein (g) per 100g")
+  carbs_per_100g = models.DecimalField(max_digits=7, decimal_places=2, help_text="Carbohydrates (g) per 100g")
+  fat_per_100g = models.DecimalField(max_digits=7, decimal_places=2, help_text="Fat (g) per 100g")
+
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now=True)
+  
+  def __str__(self):
+    return self.name
 
 class MacroPlan(models.Model):
   name = models.CharField(max_length=255)
