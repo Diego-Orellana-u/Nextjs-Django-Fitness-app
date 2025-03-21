@@ -48,12 +48,14 @@ class FoodItem(models.Model):
 
 class MacroPlan(models.Model):
   name = models.CharField(max_length=255)
-  target_calories = models.DecimalField(max_digits=6, decimal_places=2)
-  target_carbs = models.DecimalField(max_digits=6, decimal_places=2)
-  target_proteins = models.DecimalField(max_digits=6, decimal_places=2)
-  target_fats = models.DecimalField(max_digits=6, decimal_places=2)
+  target_calories = models.PositiveIntegerField()
+  target_carbs = models.PositiveIntegerField()
+  target_proteins = models.PositiveIntegerField()
+  target_fats = models.PositiveIntegerField()
 
-  start_date = models.DateTimeField(default=timezone.now, )
+  is_active = models.BooleanField(default=True)
+
+  start_date = models.DateField()
 
   user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
