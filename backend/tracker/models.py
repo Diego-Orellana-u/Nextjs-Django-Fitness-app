@@ -31,7 +31,10 @@ UNITS = [
 ]
 
 class FoodItem(models.Model):
-  name = models.CharField(max_length=200, db_index=True, unique=True)
+  name = models.CharField(max_length=200, db_index=True)
+  brand = models.CharField(max_length=150, blank=True, null=True, db_index=True)
+  off_barcode = models.CharField(max_length=50, unique=True, help_text="Unique barcode from Open Food Facts", null=True, blank=True)
+
   calories_per_100g = models.DecimalField(max_digits=7, decimal_places=2, help_text="Calories per 100g")
   protein_per_100g = models.DecimalField(max_digits=7, decimal_places=2, help_text="Protein (g) per 100g")
   carbs_per_100g = models.DecimalField(max_digits=7, decimal_places=2, help_text="Carbohydrates (g) per 100g")
@@ -82,8 +85,13 @@ class ConsumedItem(models.Model):
   serving_unit = models.CharField(max_length=10, choices=UNITS)
   time_of_day = models.CharField(max_length=10, choices=MEAL_TIMES)
 
+  calories_consumed = models.PositiveIntegerField()
+  carbs_consumed = models.PositiveIntegerField()
+  proteins_consumed = models.PositiveIntegerField()
+  fats_consumed = models.PositiveIntegerField()
+
 class MealPlan(models.Model):
-  name = models.CharField(max_length=10)
+  name = models.CharField(max_length=100)
   user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
   time_of_day = models.CharField(max_length=10, choices=MEAL_TIMES)
 
