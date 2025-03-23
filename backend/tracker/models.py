@@ -57,7 +57,7 @@ class FoodItem(models.Model):
   def __str__(self):
     return self.name
 
-class MacroPlan(models.Model):
+class NutritionGoal(models.Model):
   name = models.CharField(max_length=255)
   target_calories = models.PositiveIntegerField()
   target_carbs = models.PositiveIntegerField()
@@ -92,19 +92,20 @@ class ConsumedItem(models.Model):
   serving_quantity = models.DecimalField(max_digits=7, decimal_places=2) #To use fractions and not just integers
   serving_unit = models.CharField(max_length=10, choices=UNITS)
   time_of_day = models.CharField(max_length=10, choices=MEAL_TIMES)
+  created_at = models.DateTimeField(default=timezone.now)
 
   calories_consumed = models.DecimalField(max_digits=7, decimal_places=2)
   carbs_consumed = models.DecimalField(max_digits=7, decimal_places=2)
   proteins_consumed = models.DecimalField(max_digits=7, decimal_places=2)
   fats_consumed = models.DecimalField(max_digits=7, decimal_places=2)
 
-class MealPlan(models.Model):
+class MealTemplate(models.Model):
   name = models.CharField(max_length=100)
   user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
   time_of_day = models.CharField(max_length=10, choices=MEAL_TIMES)
 
 class MealItem(models.Model):
-  meal_plan = models.ForeignKey(MealPlan, on_delete=models.CASCADE)
+  meal_plan = models.ForeignKey(MealTemplate, on_delete=models.CASCADE)
   food_item = models.ForeignKey(FoodItem, on_delete=models.PROTECT)
   serving_quantity = models.DecimalField(max_digits=7, decimal_places=2)
   serving_unit = models.CharField(max_length=10, choices=UNITS)
