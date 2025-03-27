@@ -48,7 +48,7 @@ class FoodItem(models.Model):
   carbs_per_100g = models.DecimalField(max_digits=7, decimal_places=2, help_text="Carbohydrates (g) per 100g")
   fat_per_100g = models.DecimalField(max_digits=7, decimal_places=2, help_text="Fat (g) per 100g")
 
-  common_serving_size_unit = models.CharField(max_length=10, choices=UNITS, blank=True, null=True, help_text="e.g., 'cup', 'slice'")
+  # common_serving_size_unit = models.CharField(max_length=10, choices=UNITS, blank=True, null=True, help_text="e.g., 'cup', 'slice'")
   common_serving_size_grams = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True, help_text="Weight in grams for the common serving size (if applicable)")
 
   created_at = models.DateTimeField(auto_now_add=True)
