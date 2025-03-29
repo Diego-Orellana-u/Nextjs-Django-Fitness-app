@@ -7,6 +7,8 @@ name = "pypi"
 django = "*"
 djangorestframework = "*"
 duckdb = "*"
+pandas = "*"
+mysql-connector-python = "*"
 
 [dev-packages]
 
