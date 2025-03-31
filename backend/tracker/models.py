@@ -40,7 +40,7 @@ UNITS = [
 
 class FoodItem(models.Model):
   name = models.CharField(max_length=200, db_index=True)
-  brand = models.CharField(max_length=150, blank=True, null=True, db_index=True)
+  brands = models.CharField(max_length=150, blank=True, null=True, db_index=True)
   off_barcode = models.CharField(max_length=50, unique=True, help_text="Unique barcode from Open Food Facts", null=True, blank=True)
 
   calories_per_100g = models.DecimalField(max_digits=7, decimal_places=2, help_text="Calories per 100g")
