@@ -22,6 +22,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return self.email
     
 
+class UserProfile(models.Model):
+  user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True)
+  first_name = models.CharField(max_length=100, blank=True)
+  last_name = models.CharField(max_length=100, blank=True)
+  date_of_birth = models.DateField(null=True, blank=True)
+  height = models.DecimalField(max_digits=3, decimal_places=2)
+  weight = models.DecimalField(max_digits=3, decimal_places=2)
+
 UNITS = [
   ("g", "Grams"),
   ("ml", "Milliliters"),
@@ -85,10 +93,10 @@ class ConsumedItem(models.Model):
   serving_unit = models.CharField(max_length=10, choices=UNITS)
   time_of_day = models.CharField(max_length=10, choices=MEAL_TIMES)
 
-  calories_consumed = models.PositiveIntegerField()
-  carbs_consumed = models.PositiveIntegerField()
-  proteins_consumed = models.PositiveIntegerField()
-  fats_consumed = models.PositiveIntegerField()
+  calories_consumed = models.DecimalField(max_digits=7, decimal_places=2)
+  carbs_consumed = models.DecimalField(max_digits=7, decimal_places=2)
+  proteins_consumed = models.DecimalField(max_digits=7, decimal_places=2)
+  fats_consumed = models.DecimalField(max_digits=7, decimal_places=2)
 
 class MealPlan(models.Model):
   name = models.CharField(max_length=100)
