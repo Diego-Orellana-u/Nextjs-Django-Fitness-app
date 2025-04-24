@@ -86,7 +86,6 @@ MEAL_TIMES = [
   ("S", "Snack")
 ]
 class ConsumedItem(models.Model):
-  #FoodItem
   log = models.ForeignKey(DailyFoodLog, on_delete=models.CASCADE)
   food_item = models.ForeignKey(FoodItem, on_delete=models.PROTECT)
   serving_quantity = models.DecimalField(max_digits=7, decimal_places=2) #To use fractions and not just integers
