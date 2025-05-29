@@ -10,5 +10,9 @@ def product_list(request):
   return Response('ok')
 
 @api_view(['GET'])
-def product_detail(request):
+def product_detail(request, id):
+  if request.method == 'GET':
+    queryset = FoodItem.objects.get(id=id)
+
+    print(queryset)
   return Response('ok')
