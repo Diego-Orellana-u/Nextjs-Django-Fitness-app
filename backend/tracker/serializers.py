@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-class product_serializer(serializers.serializer):
+class productSerializer(serializers.serializer):
   id = serializers.IntegerField()
   name = serializers.CharField()
   brand = serializers.CharField()
