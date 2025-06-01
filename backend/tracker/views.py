@@ -13,7 +13,7 @@ def product_list(request):
 @api_view(['GET'])
 def product_detail(request, id):
   if request.method == 'GET':
-    queryset = FoodItem.objects.get(id=id)
+    product = FoodItem.objects.get(pk=id)
+    serializer = productSerializer(product)
 
-    print(queryset)
-  return Response('ok')
+  return Response(serializer.data)
