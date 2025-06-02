@@ -5,10 +5,11 @@ from .serializers import productSerializer
 
 # Create your views here.
 @api_view(['GET'])
-def product_list(request):
-  # if request.method == 'GET':
-  #   queryset = FoodItem.objects.
-  return Response('ok')
+def product_brand_list(request, brand):
+  if request.method == 'GET':
+    products = FoodItem.objects.filter(brand=brand)
+    serializer = productSerializer(products, many=True)
+  return Response(serializer.data)
 
 @api_view(['GET'])
 def product_detail(request, id):
