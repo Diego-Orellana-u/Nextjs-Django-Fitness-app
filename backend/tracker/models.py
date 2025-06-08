@@ -85,6 +85,8 @@ MEAL_TIMES = [
   ("D", "Dinner"),
   ("S", "Snack")
 ]
+
+
 class ConsumedItem(models.Model):
   log = models.ForeignKey(DailyFoodLog, on_delete=models.CASCADE)
   food_item = models.ForeignKey(FoodItem, on_delete=models.PROTECT)
