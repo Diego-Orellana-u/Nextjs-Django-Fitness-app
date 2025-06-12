@@ -66,7 +66,7 @@ class NutritionGoal(models.Model):
 
   is_active = models.BooleanField(default=True)
 
-  start_date = models.DateField()
+  start_date = models.DateField(auto_now_add=True)
 
   user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
