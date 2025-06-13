@@ -29,15 +29,28 @@ def product_detail(request, id):
     return Response(status=status.HTTP_204_NO_CONTENT)
   return Response(serializer.data)
 
-@api_view(['GET', 'POST', 'DELETE'])
+@api_view(['GET', 'POST'])
 def nutrition_goals(request, user):
   goal = NutritionGoal.objects.filter(user_id=user)
   if(request.method == 'GET'):
     serializer = NutriGoalsSerializer(goal, many=True)
   elif request.method == 'POST':
     serializer = NutriGoalsSerializer(data=request.data)
-    print(request.data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
-  # elif request.method = 'DELETE':
+
+  return Response(serializer.data)
+
+@api_view(['GET','POST', 'DELETE'])
+def nutrition_goal_detail(request, user, goalName):
+  goal = get_object_or_404(NutritionGoal,user_id=user, name=goalName)
+  if(request.method == 'GET'):
+    serializer = NutriGoalsSerializer(goal)
+  elif(request.method == 'POST'):
+    serializer = NutriGoalsSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+  elif request.method == 'DELETE':
+    goal.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
   return Response(serializer.data)
