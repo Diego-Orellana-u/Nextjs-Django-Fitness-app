@@ -56,10 +56,15 @@ def nutrition_goal_detail(request, user, goalName):
   return Response(serializer.data)
 
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def daily_food_log_list(request, user):
   foodLog = DailyFoodLog.objects.filter(user_id=user )
   if(request.method == 'GET'):
     serializer = DailyFoodLogSerializer(foodLog, many=True)
+
+  if(request.method == 'POST'):
+    serializer = DailyFoodLogSerializer(data=request.data)
+    serializer.is_valid()
+    serializer.save()
 
   return Response(serializer.data)
