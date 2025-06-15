@@ -42,7 +42,7 @@ def nutrition_goals(request, user):
   return Response(serializer.data)
 
 @api_view(['GET','POST', 'DELETE'])
-def nutrition_goal_detail(request, user, goalName):
+def nutrition_goal_individual(request, user, goalName):
   goal = get_object_or_404(NutritionGoal,user_id=user, name=goalName)
   if(request.method == 'GET'):
     serializer = NutriGoalsSerializer(goal)
@@ -64,7 +64,23 @@ def daily_food_log_list(request, user):
 
   if(request.method == 'POST'):
     serializer = DailyFoodLogSerializer(data=request.data)
-    serializer.is_valid()
+    serializer.is_valid(raise_exception=True)
     serializer.save()
+  return Response(serializer.data)
 
+@api_view(['GET', 'DELETE', 'PUT'])
+def daily_food_log_individual(request, user, date):
+  foodLog = get_object_or_404(DailyFoodLog, user_id=user, date=date)
+  if(request.method == 'GET'):
+    serializer = DailyFoodLogSerializer(foodLog)
+
+  if(request.method == 'DELETE'):
+    foodLog.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+  
+  if(request.method == 'PUT'):
+    serializer = DailyFoodLogSerializer(foodLog, data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
   return Response(serializer.data)
