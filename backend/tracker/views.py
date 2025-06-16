@@ -2,8 +2,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from .models import FoodItem, NutritionGoal, DailyFoodLog
-from .serializers import ProductSerializer, NutriGoalsSerializer, DailyFoodLogSerializer
+from .models import FoodItem, NutritionGoal, DailyFoodLog, ConsumedItem
+from .serializers import ProductSerializer, NutriGoalsSerializer, DailyFoodLogSerializer, ConsumedItemsSerializer
 
 # Create your views here.
 @api_view(['GET'])
@@ -83,4 +83,13 @@ def daily_food_log_individual(request, user, date):
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response(serializer.data, status=status.HTTP_201_CREATED)
+  return Response(serializer.data)
+
+
+@api_view(['GET'])
+def consumed_items_list(request, logid):
+  consumedItem = ConsumedItem.objects.filter(log_id=logid)
+  if(request.method == 'GET'):
+    serializer = ConsumedItemsSerializer(consumedItem, many=True)
+
   return Response(serializer.data)

@@ -7,5 +7,6 @@ urlpatterns = [
   path('goals/<int:user>', views.nutrition_goals),
   path('goals/<int:user>/<str:goalName>', views.nutrition_goal_individual),
   path('dailylog/<int:user>', views.daily_food_log_list),
-  path('dailylog/<int:user>/<str:date>', views.daily_food_log_individual)
+  path('dailylog/<int:user>/<str:date>', views.daily_food_log_individual),
+  path('consumeditems/<int:logid>', views.consumed_items_list)
 ]
