@@ -1,5 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.core.exceptions import ValidationError
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import FoodItem, NutritionGoal, DailyFoodLog, ConsumedItem, MealTemplate
@@ -94,10 +95,27 @@ def consumed_items_list(request, logid):
 
   return Response(serializer.data)
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def meal_template_list(request,user):
   mealTemplates = MealTemplate.objects.filter(user_id=user)
   if(request.method == 'GET'):
     serializer = MealTemplatesSerializer(mealTemplates, many=True)
+
+  if(request.method == 'POST'):
+    print(request.data)
+    serializer = MealTemplatesSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+  return Response(serializer.data)
+
+@api_view(['GET', 'DELETE'])
+def meal_template_individual(request, user, meal_id):
+  mealTemplate = get_object_or_404(MealTemplate, user_id=user, pk=meal_id )
+  if(request.method == 'GET'):
+    serializer = MealTemplatesSerializer(mealTemplate)
+
+  if(request.method == 'DELETE'):
+    mealTemplate.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
   return Response(serializer.data)
