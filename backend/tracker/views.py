@@ -121,6 +121,12 @@ def meal_template_individual(request, user, meal_id):
   if(request.method == 'DELETE'):
     mealTemplate.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+  return Response(serializer.data)
 
+@api_view(['GET'])
+def template_items_list(request, user, meal_plan_id):
+  templateItems = TemplateItem.objects.filter(meal_plan_id__user_id=user).filter(meal_plan_id=meal_plan_id)
+  if(request.method == 'GET'):
+    serializer = TemplateItemSerializer(templateItems, many=True)
 
   return Response(serializer.data)

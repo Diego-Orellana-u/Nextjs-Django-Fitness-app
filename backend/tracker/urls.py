@@ -10,5 +10,6 @@ urlpatterns = [
   path('dailylog/<int:user>/<str:date>', views.daily_food_log_individual),
   path('consumeditems/<int:logid>', views.consumed_items_list),
   path('mealtemplates/<int:user>', views.meal_template_list),
-  path('mealtemplates/<int:user>/<int:meal_id>', views.meal_template_individual)
+  path('mealtemplates/<int:user>/<int:meal_id>', views.meal_template_individual),
+  path('templateitems/<int:user>/<int:meal_plan_id>', views.template_items_list),
 ]
