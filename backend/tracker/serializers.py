@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import FoodItem, NutritionGoal, DailyFoodLog, ConsumedItem, MealTemplate
+from .models import FoodItem, NutritionGoal, DailyFoodLog, ConsumedItem, MealTemplate, TemplateItem
 class ProductSerializer(serializers.ModelSerializer):
   class Meta:
     model = FoodItem
@@ -31,3 +31,9 @@ class MealTemplatesSerializer(serializers.ModelSerializer):
   class Meta:
     model = MealTemplate
     fields = ['name', 'user', 'time_of_day']
+
+class TemplateItemSerializer(serializers.ModelSerializer):
+
+  class Meta:
+    model = TemplateItem
+    fields = ['meal_plan', 'food_item', 'serving_quantity', 'serving_unit']

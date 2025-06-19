@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from django.core.exceptions import ValidationError
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from .models import FoodItem, NutritionGoal, DailyFoodLog, ConsumedItem, MealTemplate
-from .serializers import ProductSerializer, NutriGoalsSerializer, DailyFoodLogSerializer, ConsumedItemsSerializer, MealTemplatesSerializer
+from .models import FoodItem, NutritionGoal, DailyFoodLog, ConsumedItem, MealTemplate, TemplateItem
+from .serializers import ProductSerializer, NutriGoalsSerializer, DailyFoodLogSerializer, ConsumedItemsSerializer, MealTemplatesSerializer, TemplateItemSerializer
 
 # Create your views here.
 @api_view(['GET'])
@@ -108,14 +108,19 @@ def meal_template_list(request,user):
     serializer.save()
   return Response(serializer.data)
 
-@api_view(['GET', 'DELETE'])
+@api_view(['GET', 'DELETE', 'PUT'])
 def meal_template_individual(request, user, meal_id):
   mealTemplate = get_object_or_404(MealTemplate, user_id=user, pk=meal_id )
   if(request.method == 'GET'):
     serializer = MealTemplatesSerializer(mealTemplate)
 
+  if(request.method == 'PUT'):
+    serializer = MealTemplatesSerializer(mealTemplate, data=request.data)  
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
   if(request.method == 'DELETE'):
     mealTemplate.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
 
   return Response(serializer.data)
