@@ -81,34 +81,28 @@ class ConsumedItemsList(ListAPIView):
 
   serializer_class = ConsumedItemsSerializer
 
-@api_view(['GET', 'POST'])
-def meal_template_list(request,user):
-  mealTemplates = MealTemplate.objects.filter(user_id=user)
-  if(request.method == 'GET'):
-    serializer = MealTemplatesSerializer(mealTemplates, many=True)
+class MealTemplateList(ListCreateAPIView):
+  def get_queryset(self):
+    mealTemplates = MealTemplate.objects.filter(user_id=self.kwargs['user'])
+    if mealTemplates:
+      return mealTemplates
+    else:
+      raise NoContentException
+    
+  serializer_class = MealTemplatesSerializer
 
-  if(request.method == 'POST'):
-    print(request.data)
-    serializer = MealTemplatesSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    serializer.save()
-  return Response(serializer.data)
+class MealTemplateIndividual(RetrieveUpdateDestroyAPIView):
+  lookup_field = 'user'
+  lookup_url_kwarg = 'user'
 
-@api_view(['GET', 'DELETE', 'PUT'])
-def meal_template_individual(request, user, meal_id):
-  mealTemplate = get_object_or_404(MealTemplate, user_id=user, pk=meal_id )
-  if(request.method == 'GET'):
-    serializer = MealTemplatesSerializer(mealTemplate)
-
-  if(request.method == 'PUT'):
-    serializer = MealTemplatesSerializer(mealTemplate, data=request.data)  
-    serializer.is_valid(raise_exception=True)
-    serializer.save()
-  if(request.method == 'DELETE'):
-    mealTemplate.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
-  return Response(serializer.data)
-
+  def get_queryset(self):
+    mealTemplate = MealTemplate.objects.filter(user_id=self.kwargs['user'], pk=self.kwargs['meal_id'])
+    if MealTemplate:
+      return mealTemplate
+    else:
+      raise NoContentException
+  
+  serializer_class = MealTemplatesSerializer
 
 class TemplateItemsList(ListAPIView):
   def get_queryset(self):
