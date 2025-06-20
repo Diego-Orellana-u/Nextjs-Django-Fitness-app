@@ -1,8 +1,8 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.exceptions import NoContent
 from rest_framework.generics import ListAPIView
 from rest_framework import status
+from .exceptions import NoContentException
 from django.shortcuts import get_object_or_404
 from .models import FoodItem, NutritionGoal, DailyFoodLog, ConsumedItem, MealTemplate, TemplateItem
 from .serializers import ProductSerializer, NutriGoalsSerializer, DailyFoodLogSerializer, ConsumedItemsSerializer, MealTemplatesSerializer, TemplateItemSerializer
@@ -127,6 +127,6 @@ class TemplateItemsList(ListAPIView):
     if queryset:
       return queryset
     else:
-      raise NoContent()
+      raise NoContentException()
   
   serializer_class = TemplateItemSerializer
