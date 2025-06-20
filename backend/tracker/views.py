@@ -85,13 +85,11 @@ def daily_food_log_individual(request, user, date):
   return Response(serializer.data)
 
 
-@api_view(['GET'])
-def consumed_items_list(request, logid):
-  consumedItem = ConsumedItem.objects.filter(log_id=logid)
-  if(request.method == 'GET'):
-    serializer = ConsumedItemsSerializer(consumedItem, many=True)
+class ConsumedItemsList(ListAPIView):
+  def get_queryset(self):
+    return ConsumedItem.objects.filter(log_id=self.kwargs['logid'])
 
-  return Response(serializer.data)
+  serializer_class = ConsumedItemsSerializer
 
 @api_view(['GET', 'POST'])
 def meal_template_list(request,user):
