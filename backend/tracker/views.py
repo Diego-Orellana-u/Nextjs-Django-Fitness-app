@@ -1,7 +1,8 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework.exceptions import NoContent
 from rest_framework.generics import ListAPIView
+from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import FoodItem, NutritionGoal, DailyFoodLog, ConsumedItem, MealTemplate, TemplateItem
 from .serializers import ProductSerializer, NutriGoalsSerializer, DailyFoodLogSerializer, ConsumedItemsSerializer, MealTemplatesSerializer, TemplateItemSerializer
@@ -119,13 +120,13 @@ def meal_template_individual(request, user, meal_id):
     return Response(status=status.HTTP_204_NO_CONTENT)
   return Response(serializer.data)
 
-@api_view(['GET'])
-def template_items_list(request, user, meal_plan_id):
-  templateItems = TemplateItem.objects.filter(meal_plan_id__user_id=user).filter(meal_plan_id=meal_plan_id)
-  if not templateItems:
-    return Response(status=status.HTTP_204_NO_CONTENT)
 
-  if(request.method == 'GET'):
-    serializer = TemplateItemSerializer(templateItems, many=True)
-
-  return Response(serializer.data)
+class TemplateItemsList(ListAPIView):
+  def get_queryset(self):
+    queryset = TemplateItem.objects.filter(meal_plan_id__user_id=self.kwargs['user']).filter(meal_plan_id=self.kwargs['meal_plan_id'])
+    if queryset:
+      return queryset
+    else:
+      raise NoContent()
+  
+  serializer_class = TemplateItemSerializer
