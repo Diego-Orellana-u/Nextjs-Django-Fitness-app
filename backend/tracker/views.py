@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.generics import ListAPIView, ListCreateAPIView
+from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework import status
 from .exceptions import NoContentException
 from django.shortcuts import get_object_or_404
@@ -54,36 +54,26 @@ def nutrition_goal_individual(request, user, goalName):
     return Response(status=status.HTTP_204_NO_CONTENT)
   return Response(serializer.data)
 
-
-@api_view(['GET', 'POST'])
-def daily_food_log_list(request, user):
-  foodLog = DailyFoodLog.objects.filter(user_id=user )
-  if(request.method == 'GET'):
-    serializer = DailyFoodLogSerializer(foodLog, many=True)
-
-  if(request.method == 'POST'):
-    serializer = DailyFoodLogSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    serializer.save()
-  return Response(serializer.data)
-
-@api_view(['GET', 'DELETE', 'PUT'])
-def daily_food_log_individual(request, user, date):
-  foodLog = get_object_or_404(DailyFoodLog, user_id=user, date=date)
-  if(request.method == 'GET'):
-    serializer = DailyFoodLogSerializer(foodLog)
-
-  if(request.method == 'DELETE'):
-    foodLog.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+class DailyFoodLogList(ListCreateAPIView):
+  def get_queryset(self):
+    dailyLog = DailyFoodLog.objects.filter(user_id=self.kwargs['user'])
+    if dailyLog:
+      return dailyLog
+    else: 
+      raise NoContentException
   
-  if(request.method == 'PUT'):
-    serializer = DailyFoodLogSerializer(foodLog, data=request.data)
-    serializer.is_valid(raise_exception=True)
-    serializer.save()
-    return Response(serializer.data, status=status.HTTP_201_CREATED)
-  return Response(serializer.data)
+  serializer_class = DailyFoodLogSerializer
 
+class DailyFoodLogIndividual(RetrieveUpdateDestroyAPIView):
+  lookup_url_kwarg = 'user'
+  lookup_field = 'user'
+  def get_queryset(self):
+    dailyLog = DailyFoodLog.objects.filter(user_id=self.kwargs['user'], date=self.kwargs['date'])
+    if dailyLog:
+      return dailyLog
+    else: 
+      raise NoContentException
+  serializer_class = DailyFoodLogSerializer
 
 class ConsumedItemsList(ListAPIView):
   def get_queryset(self):
