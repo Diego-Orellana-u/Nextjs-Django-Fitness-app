@@ -1,18 +1,16 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.core.exceptions import ValidationError
 from rest_framework import status
+from rest_framework.generics import ListAPIView
 from django.shortcuts import get_object_or_404
 from .models import FoodItem, NutritionGoal, DailyFoodLog, ConsumedItem, MealTemplate, TemplateItem
 from .serializers import ProductSerializer, NutriGoalsSerializer, DailyFoodLogSerializer, ConsumedItemsSerializer, MealTemplatesSerializer, TemplateItemSerializer
 
-# Create your views here.
-@api_view(['GET'])
-def product_brand_list(request, brand):
-  if request.method == 'GET':
-    products = FoodItem.objects.filter(brand=brand)
-    serializer = ProductSerializer(products, many=True)
-  return Response(serializer.data)
+class ProductBrandList(ListAPIView):
+  def get_queryset(self):
+    return FoodItem.objects.filter(brand=self.kwargs['brand'])
+  
+  serializer_class = ProductSerializer
 
 @api_view(['GET', 'POST', 'DELETE'])
 def product_detail(request, id):
