@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, ListCreateAPIView
 from rest_framework import status
 from .exceptions import NoContentException
 from django.shortcuts import get_object_or_404
@@ -29,17 +29,16 @@ def product_detail(request, id):
     return Response(status=status.HTTP_204_NO_CONTENT)
   return Response(serializer.data)
 
-@api_view(['GET', 'POST'])
-def nutrition_goals(request, user):
-  goal = NutritionGoal.objects.filter(user_id=user)
-  if(request.method == 'GET'):
-    serializer = NutriGoalsSerializer(goal, many=True)
-  elif request.method == 'POST':
-    serializer = NutriGoalsSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    serializer.save()
 
-  return Response(serializer.data)
+class NutritionGoals(ListCreateAPIView):
+  def get_queryset(self):
+    nutriGoal = NutritionGoal.objects.filter(user_id=self.kwargs['user'])
+    if nutriGoal:
+      return nutriGoal
+    else:
+      raise NoContentException
+  
+  serializer_class = NutriGoalsSerializer
 
 @api_view(['GET','POST', 'DELETE'])
 def nutrition_goal_individual(request, user, goalName):
