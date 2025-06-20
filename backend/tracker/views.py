@@ -1,34 +1,34 @@
+from django.db.models import Q
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListAPIView, ListCreateAPIView,RetrieveDestroyAPIView ,RetrieveUpdateDestroyAPIView
 from rest_framework import status
 from .exceptions import NoContentException
 from django.shortcuts import get_object_or_404
 from .models import FoodItem, NutritionGoal, DailyFoodLog, ConsumedItem, MealTemplate, TemplateItem
 from .serializers import ProductSerializer, NutriGoalsSerializer, DailyFoodLogSerializer, ConsumedItemsSerializer, MealTemplatesSerializer, TemplateItemSerializer
 
-class ProductBrandList(ListAPIView):
+class ProductsByNameOrBrand(ListCreateAPIView):
   def get_queryset(self):
-    return FoodItem.objects.filter(brand=self.kwargs['brand'])
+    productList = FoodItem.objects.filter(Q(name__icontains=self.kwargs['search_term']) | Q(brand__icontains=self.kwargs['search_term']))
+    if productList:
+      return productList
+    else:
+      raise NoContentException
   
   serializer_class = ProductSerializer
 
-@api_view(['GET', 'POST', 'DELETE'])
-def product_detail(request, id):
-  product = get_object_or_404(FoodItem, pk=id)
-  if request.method == 'GET':
-    serializer = ProductSerializer(product)
+class ProductById(RetrieveUpdateDestroyAPIView):
+  lookup_field = 'id'
+  lookup_url_kwarg = 'id'
+  def get_queryset(self):
+    product = FoodItem.objects.filter(id=self.kwargs['id'])
+    if product:
+      return product
+    else: 
+      raise NoContentException
 
-  elif request.method == 'POST':
-    serializer = ProductSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    serializer.save()
-
-  elif request.method == 'DELETE':
-    product.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
-  return Response(serializer.data)
-
+  serializer_class = ProductSerializer
 
 class NutritionGoals(ListCreateAPIView):
   def get_queryset(self):
@@ -40,19 +40,17 @@ class NutritionGoals(ListCreateAPIView):
   
   serializer_class = NutriGoalsSerializer
 
-@api_view(['GET','POST', 'DELETE'])
-def nutrition_goal_individual(request, user, goalName):
-  goal = get_object_or_404(NutritionGoal,user_id=user, name=goalName)
-  if(request.method == 'GET'):
-    serializer = NutriGoalsSerializer(goal)
-  elif(request.method == 'POST'):
-    serializer = NutriGoalsSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    serializer.save()
-  elif request.method == 'DELETE':
-    goal.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
-  return Response(serializer.data)
+class NutritionGoalIndividual(RetrieveUpdateDestroyAPIView):
+  lookup_field = 'user'
+  lookup_url_kwarg = 'user'
+  def get_queryset(self):
+    nutritionGoal = NutritionGoal.objects.filter(user_id=self.kwargs['user'], name=self.kwargs['goalName'])
+    if nutritionGoal:
+      return nutritionGoal
+    else: 
+      raise NoContentException
+    
+  serializer_class = NutriGoalsSerializer
 
 class DailyFoodLogList(ListCreateAPIView):
   def get_queryset(self):
