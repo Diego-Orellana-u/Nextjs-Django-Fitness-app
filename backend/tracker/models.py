@@ -89,7 +89,7 @@ MEAL_TIMES = [
 
 class ConsumedItem(models.Model):
   log = models.ForeignKey(DailyFoodLog, on_delete=models.CASCADE)
-  food_item = models.ForeignKey(FoodItem, on_delete=models.PROTECT)
+  product = models.ForeignKey(FoodItem, on_delete=models.PROTECT, null=True)
   serving_quantity = models.DecimalField(max_digits=7, decimal_places=2) #To use fractions and not just integers
   serving_unit = models.CharField(max_length=10, choices=UNITS)
   time_of_day = models.CharField(max_length=10, choices=MEAL_TIMES)

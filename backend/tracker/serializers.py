@@ -9,31 +9,31 @@ class ProductSerializer(serializers.ModelSerializer):
 class NutriGoalsSerializer(serializers.ModelSerializer):
   class Meta:
     model = NutritionGoal
-    fields = ['name', 'target_calories', 'target_carbs', 'target_proteins', 'target_fats', 'is_active', 'start_date', 'user']
+    fields = ['id', 'name', 'target_calories', 'target_carbs', 'target_proteins', 'target_fats', 'is_active', 'start_date', 'user']
 
 
 class DailyFoodLogSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = DailyFoodLog
-    fields = ['user', 'date']
+    fields = ['id','user', 'date']
 
 
 class ConsumedItemsSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = ConsumedItem
-    fields = ['log', 'food_item', 'serving_quantity', 'serving_unit', 'time_of_day', 'created_at', 'calories_consumed', 'carbs_consumed', 'proteins_consumed', 'fats_consumed']
+    fields = ['log', 'product', 'serving_quantity', 'serving_unit', 'time_of_day', 'created_at', 'calories_consumed', 'carbs_consumed', 'proteins_consumed', 'fats_consumed']
 
 
 class MealTemplatesSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = MealTemplate
-    fields = ['name', 'user', 'time_of_day']
+    fields = ['id','name', 'user', 'time_of_day']
 
 class TemplateItemSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = TemplateItem
-    fields = ['meal_plan', 'food_item', 'serving_quantity', 'serving_unit']
+    fields = ['id','meal_plan', 'food_item', 'serving_quantity', 'serving_unit']
