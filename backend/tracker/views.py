@@ -19,10 +19,9 @@ class ProductsByNameOrBrand(ListCreateAPIView):
   serializer_class = ProductSerializer
 
 class ProductById(RetrieveUpdateDestroyAPIView):
-  lookup_field = 'id'
-  lookup_url_kwarg = 'id'
+  lookup_url_kwarg = 'product_id'
   def get_queryset(self):
-    product = FoodItem.objects.filter(id=self.kwargs['id'])
+    product = FoodItem.objects.filter(pk=self.kwargs['product_id'])
     if product:
       return product
     else: 
@@ -32,7 +31,7 @@ class ProductById(RetrieveUpdateDestroyAPIView):
 
 class NutritionGoalsListByUserId(ListCreateAPIView):
   def get_queryset(self):
-    nutriGoal = NutritionGoal.objects.filter(user_id=self.kwargs['user'])
+    nutriGoal = NutritionGoal.objects.filter(user_id=self.kwargs['user_id'])
     if nutriGoal:
       return nutriGoal
     else:
@@ -41,9 +40,9 @@ class NutritionGoalsListByUserId(ListCreateAPIView):
   serializer_class = NutriGoalsSerializer
 
 class NutritionGoalByGoalId(RetrieveUpdateDestroyAPIView):
-  lookup_field = 'user'
+  lookup_field = 'user_id'
   def get_queryset(self):
-    nutritionGoal = NutritionGoal.objects.filter(user_id=self.kwargs['user'], id=self.kwargs['goal_id'])
+    nutritionGoal = NutritionGoal.objects.filter(user_id=self.kwargs['user_id'], id=self.kwargs['goal_id'])
     if nutritionGoal:
       return nutritionGoal
     else: 
@@ -51,33 +50,33 @@ class NutritionGoalByGoalId(RetrieveUpdateDestroyAPIView):
     
   serializer_class = NutriGoalsSerializer
 
-class DailyFoodLogList(ListCreateAPIView):
+class DailyFoodLogByUserId(ListCreateAPIView):
   def get_queryset(self):
-    dailyLog = DailyFoodLog.objects.filter(user_id=self.kwargs['user'])
+    dailyLog = DailyFoodLog.objects.filter(user_id=self.kwargs['user_id'])
     if dailyLog:
       return dailyLog
     else: 
       raise NoContentException
   serializer_class = DailyFoodLogSerializer
 
-class DailyFoodLogIndividual(RetrieveUpdateDestroyAPIView):
-  lookup_field = 'user'
+class DailyFoodLogByLogId(RetrieveUpdateDestroyAPIView):
+  lookup_field = 'user_id'
   def get_queryset(self):
-    dailyLog = DailyFoodLog.objects.filter(user_id=self.kwargs['user'], id=self.kwargs['log_id'])
+    dailyLog = DailyFoodLog.objects.filter(user_id=self.kwargs['user_id'], id=self.kwargs['log_id'])
     if dailyLog:
       return dailyLog
     else: 
       raise NoContentException
   serializer_class = DailyFoodLogSerializer
 
-class ConsumedItemsList(ListCreateAPIView):
+class ConsumedItemsByDailyLogId(ListCreateAPIView):
   def get_queryset(self):
     return ConsumedItem.objects.filter(log_id=self.kwargs['log_id'])
 
   serializer_class = ConsumedItemsSerializer
 
 
-class ConsumedItemIndividual(RetrieveUpdateDestroyAPIView):
+class ConsumedItemById(RetrieveUpdateDestroyAPIView):
   lookup_field = 'id'
   def get_queryset(self):
     consumed_item = ConsumedItem.objects.filter(id=self.kwargs['id'])
@@ -88,9 +87,9 @@ class ConsumedItemIndividual(RetrieveUpdateDestroyAPIView):
   
   serializer_class = ConsumedItemsSerializer
 
-class MealTemplateList(ListCreateAPIView):
+class MealTemplateByUserId(ListCreateAPIView):
   def get_queryset(self):
-    mealTemplates = MealTemplate.objects.filter(user_id=self.kwargs['user'])
+    mealTemplates = MealTemplate.objects.filter(user_id=self.kwargs['user_id'])
     if mealTemplates:
       return mealTemplates
     else:
@@ -98,12 +97,11 @@ class MealTemplateList(ListCreateAPIView):
     
   serializer_class = MealTemplatesSerializer
 
-class MealTemplateIndividual(RetrieveUpdateDestroyAPIView):
-  lookup_field = 'user'
-  lookup_url_kwarg = 'user'
+class MealTemplateById(RetrieveUpdateDestroyAPIView):
+  lookup_field = 'user_id'
 
   def get_queryset(self):
-    mealTemplate = MealTemplate.objects.filter(user_id=self.kwargs['user'], pk=self.kwargs['meal_id'])
+    mealTemplate = MealTemplate.objects.filter(user_id=self.kwargs['user_id'], pk=self.kwargs['meal_id'])
     if MealTemplate:
       return mealTemplate
     else:
@@ -111,9 +109,9 @@ class MealTemplateIndividual(RetrieveUpdateDestroyAPIView):
   
   serializer_class = MealTemplatesSerializer
 
-class TemplateItemsList(ListCreateAPIView):
+class TemplateProductsByMealTemplateId(ListCreateAPIView):
   def get_queryset(self):
-    queryset = TemplateItem.objects.filter(meal_plan_id__user_id=self.kwargs['user']).filter(meal_plan_id=self.kwargs['meal_plan_id'])
+    queryset = TemplateItem.objects.filter(meal_plan_id__user_id=self.kwargs['user']).filter(meal_plan_id=self.kwargs['meal_template_id'])
     if queryset:
       return queryset
     else:
@@ -121,10 +119,10 @@ class TemplateItemsList(ListCreateAPIView):
   
   serializer_class = TemplateItemSerializer
 
-class TemplateItemsIndividual(RetrieveUpdateDestroyAPIView):
+class TemplateProductById(RetrieveUpdateDestroyAPIView):
   lookup_field = 'id'
   def get_queryset(self):
-    queryset = TemplateItem.objects.filter(meal_plan_id__user_id=self.kwargs['user']).filter(meal_plan_id=self.kwargs['meal_plan_id'])
+    queryset = TemplateItem.objects.filter(meal_plan_id__user_id=self.kwargs['user_id']).filter(meal_plan_id=self.kwargs['meal_template_id'])
     if queryset:
       return queryset
     else:
