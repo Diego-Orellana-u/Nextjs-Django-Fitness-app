@@ -1,14 +1,23 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
+from rest_framework.routers import SimpleRouter
+
+router = SimpleRouter()
+
+router.register('nutritiongoals', views.NutritionGoalViewSet, basename='nutritiongoals')
+
+# Instead of using complex url's like user_id/goal_id, I can use only goal_id and to get the specific goal use the goal_id + the used id permission
+
 
 urlpatterns = [
+  path('', include(router.urls)),
   # Endpoints to retrieve, post, delete and update products. Both as a list and individual
   path('products/search/<str:search_term>/', views.ProductsByNameOrBrand.as_view()),
   path('products/<int:product_id>/', views.ProductById.as_view()),
 
-  # Endpoints to retrieve the nutrition goals list for a specific user and a specific nutrition goal of that user
-  path('nutritiongoals/search/<int:user_id>', views.NutritionGoalsListByUserId.as_view()),
-  path('nutritiongoals/<int:user_id>/<int:goal_id>', views.NutritionGoalByGoalId.as_view()),
+  # # Endpoints to retrieve the nutrition goals list for a specific user and a specific nutrition goal of that user
+  # path('nutritiongoals/search/<int:user_id>', views.NutritionGoalsListByUserId.as_view()),
+  # path('nutritiongoals/<int:user_id>/<int:goal_id>', views.NutritionGoalByGoalId.as_view()),
 
   # Endpoints to the daily logs list of users and a specific daily log. Consumed items have a foreign key with daily logs.
   path('dailyfoodlog/search/<int:user_id>', views.DailyFoodLogByUserId.as_view()),

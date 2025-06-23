@@ -2,11 +2,14 @@ from django.db.models import Q
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView, ListCreateAPIView,RetrieveDestroyAPIView ,RetrieveUpdateDestroyAPIView
-from rest_framework import status
+from rest_framework import permissions, status
+from rest_framework.viewsets import ModelViewSet
 from .exceptions import NoContentException
 from django.shortcuts import get_object_or_404
 from .models import FoodItem, NutritionGoal, DailyFoodLog, ConsumedItem, MealTemplate, TemplateItem
 from .serializers import ProductSerializer, NutriGoalsSerializer, DailyFoodLogSerializer, ConsumedItemsSerializer, MealTemplatesSerializer, TemplateItemSerializer
+
+
 
 class ProductsByNameOrBrand(ListCreateAPIView):
   def get_queryset(self):
@@ -29,25 +32,8 @@ class ProductById(RetrieveUpdateDestroyAPIView):
 
   serializer_class = ProductSerializer
 
-class NutritionGoalsListByUserId(ListCreateAPIView):
-  def get_queryset(self):
-    nutriGoal = NutritionGoal.objects.filter(user_id=self.kwargs['user_id'])
-    if nutriGoal:
-      return nutriGoal
-    else:
-      raise NoContentException
-  
-  serializer_class = NutriGoalsSerializer
-
-class NutritionGoalByGoalId(RetrieveUpdateDestroyAPIView):
-  lookup_field = 'user_id'
-  def get_queryset(self):
-    nutritionGoal = NutritionGoal.objects.filter(user_id=self.kwargs['user_id'], id=self.kwargs['goal_id'])
-    if nutritionGoal:
-      return nutritionGoal
-    else: 
-      raise NoContentException
-    
+class NutritionGoalViewSet(ModelViewSet):
+  queryset = NutritionGoal.objects.all()
   serializer_class = NutriGoalsSerializer
 
 class DailyFoodLogByUserId(ListCreateAPIView):
