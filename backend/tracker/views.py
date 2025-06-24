@@ -36,23 +36,9 @@ class NutritionGoalViewSet(ModelViewSet):
   queryset = NutritionGoal.objects.all()
   serializer_class = NutriGoalsSerializer
 
-class DailyFoodLogByUserId(ListCreateAPIView):
-  def get_queryset(self):
-    dailyLog = DailyFoodLog.objects.filter(user_id=self.kwargs['user_id'])
-    if dailyLog:
-      return dailyLog
-    else: 
-      raise NoContentException
-  serializer_class = DailyFoodLogSerializer
 
-class DailyFoodLogByLogId(RetrieveUpdateDestroyAPIView):
-  lookup_field = 'user_id'
-  def get_queryset(self):
-    dailyLog = DailyFoodLog.objects.filter(user_id=self.kwargs['user_id'], id=self.kwargs['log_id'])
-    if dailyLog:
-      return dailyLog
-    else: 
-      raise NoContentException
+class DailyFoodLogViewSet(ModelViewSet):
+  queryset = DailyFoodLog.objects.all()
   serializer_class = DailyFoodLogSerializer
 
 class ConsumedItemsByDailyLogId(ListCreateAPIView):
