@@ -1,41 +1,24 @@
 from django.db.models import Q
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView, ListCreateAPIView,RetrieveDestroyAPIView ,RetrieveUpdateDestroyAPIView
-from rest_framework import permissions, status
+from rest_framework import filters
 from rest_framework.viewsets import ModelViewSet
 from .exceptions import NoContentException
-from django.shortcuts import get_object_or_404
+from rest_framework.decorators import action
 from .models import FoodItem, NutritionGoal, DailyFoodLog, ConsumedItem, MealTemplate, TemplateItem
 from .serializers import ProductSerializer, NutriGoalsSerializer, DailyFoodLogSerializer, ConsumedItemsSerializer, MealTemplatesSerializer, TemplateItemSerializer
 
 
+class ProductsViewSet(ModelViewSet):
+  queryset = FoodItem.objects.all()
+  serializer_class = ProductSerializer
 
-class ProductsByNameOrBrand(ListCreateAPIView):
-  def get_queryset(self):
-    productList = FoodItem.objects.filter(Q(name__icontains=self.kwargs['search_term']) | Q(brand__icontains=self.kwargs['search_term']))
-    if productList:
-      return productList
-    else:
-      raise NoContentException
+  filter_backends = [filters.SearchFilter]
+  search_fields = ['name', 'brand']
   
-  serializer_class = ProductSerializer
-
-class ProductById(RetrieveUpdateDestroyAPIView):
-  lookup_url_kwarg = 'product_id'
-  def get_queryset(self):
-    product = FoodItem.objects.filter(pk=self.kwargs['product_id'])
-    if product:
-      return product
-    else: 
-      raise NoContentException
-
-  serializer_class = ProductSerializer
-
 class NutritionGoalViewSet(ModelViewSet):
   queryset = NutritionGoal.objects.all()
   serializer_class = NutriGoalsSerializer
-
 
 class DailyFoodLogViewSet(ModelViewSet):
   queryset = DailyFoodLog.objects.all()
@@ -46,7 +29,6 @@ class ConsumedItemsByDailyLogId(ListCreateAPIView):
     return ConsumedItem.objects.filter(log_id=self.kwargs['log_id'])
 
   serializer_class = ConsumedItemsSerializer
-
 
 class ConsumedItemById(RetrieveUpdateDestroyAPIView):
   lookup_field = 'id'

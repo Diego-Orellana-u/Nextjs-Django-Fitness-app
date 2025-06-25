@@ -6,6 +6,7 @@ router = DefaultRouter()
 
 router.register('nutritiongoals', views.NutritionGoalViewSet, basename='nutritiongoals')
 router.register('dailyfoodlog', views.DailyFoodLogViewSet)
+router.register('products', views.ProductsViewSet)
 
 # Instead of using complex url's like user_id/goal_id, I can use only goal_id and to get the specific goal use the goal_id + the used id permission
 
@@ -13,8 +14,8 @@ router.register('dailyfoodlog', views.DailyFoodLogViewSet)
 urlpatterns = [
   path('', include(router.urls)),
   # Endpoints to retrieve, post, delete and update products. Both as a list and individual
-  path('products/search/<str:search_term>/', views.ProductsByNameOrBrand.as_view()),
-  path('products/<int:product_id>/', views.ProductById.as_view()),
+  # path('products/search/<str:search_term>/', views.ProductsByNameOrBrand.as_view()),
+  # path('products/<int:product_id>/', views.ProductById.as_view()),
 
   # Endpoints to the list of items associated with a certain log and to an specific consumed item. They show quantities, macros, daily log id associated with, etc.
   path('consumeditems/search/<int:log_id>', views.ConsumedItemsByDailyLogId.as_view()),
