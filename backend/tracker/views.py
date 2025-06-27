@@ -1,21 +1,23 @@
-from django.db.models import Q
-from rest_framework.response import Response
-from rest_framework.generics import ListAPIView, ListCreateAPIView,RetrieveDestroyAPIView ,RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework import filters
+from django.db.models import Q
 from rest_framework.viewsets import ModelViewSet
 from .exceptions import NoContentException
-from rest_framework.decorators import action
 from .models import FoodItem, NutritionGoal, DailyFoodLog, ConsumedItem, MealTemplate, TemplateItem
 from .serializers import ProductSerializer, NutriGoalsSerializer, DailyFoodLogSerializer, ConsumedItemsSerializer, MealTemplatesSerializer, TemplateItemSerializer
 
 
 class ProductsViewSet(ModelViewSet):
-  queryset = FoodItem.objects.all()
+
   serializer_class = ProductSerializer
 
-  filter_backends = [filters.SearchFilter]
-  search_fields = ['name', 'brand']
-  
+  def get_queryset(self):
+    queryset = FoodItem.objects.all()
+    search = self.request.query_params.get('search')
+    if search is not None:
+      queryset = queryset.filter(Q(name__icontains=search) | Q(brand__icontains=search))
+    return queryset
+
 class NutritionGoalViewSet(ModelViewSet):
   queryset = NutritionGoal.objects.all()
   serializer_class = NutriGoalsSerializer
