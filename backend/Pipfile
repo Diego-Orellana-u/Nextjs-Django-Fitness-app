@@ -9,6 +9,7 @@ djangorestframework = "*"
 duckdb = "*"
 pandas = "*"
 mysql-connector-python = "*"
+django-filter = "*"
 
 [dev-packages]
 
