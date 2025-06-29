@@ -1,22 +1,24 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework import filters
-from django.db.models import Q
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.pagination import PageNumberPagination
 from .exceptions import NoContentException
 from .models import FoodItem, NutritionGoal, DailyFoodLog, ConsumedItem, MealTemplate, TemplateItem
 from .serializers import ProductSerializer, NutriGoalsSerializer, DailyFoodLogSerializer, ConsumedItemsSerializer, MealTemplatesSerializer, TemplateItemSerializer
+from .filters import ProductFilter
 
 
 class ProductsViewSet(ModelViewSet):
 
+  queryset = FoodItem.objects.all()
   serializer_class = ProductSerializer
+  filter_backends = [SearchFilter, DjangoFilterBackend, OrderingFilter]
+  search_fields = ['name', 'brand']
+  filterset_class = ProductFilter
+  pagination_class = PageNumberPagination
+  ordering_fields = ['protein_per_100g', 'calories_per_100g']
 
-  def get_queryset(self):
-    queryset = FoodItem.objects.all()
-    search = self.request.query_params.get('search')
-    if search is not None:
-      queryset = queryset.filter(Q(name__icontains=search) | Q(brand__icontains=search))
-    return queryset
 
 class NutritionGoalViewSet(ModelViewSet):
   queryset = NutritionGoal.objects.all()
@@ -67,7 +69,7 @@ class MealTemplateById(RetrieveUpdateDestroyAPIView):
 
 class TemplateProductsByMealTemplateId(ListCreateAPIView):
   def get_queryset(self):
-    queryset = TemplateItem.objects.filter(meal_plan_id__user_id=self.kwargs['user']).filter(meal_plan_id=self.kwargs['meal_template_id'])
+    queryset = TemplateItem.objects.filter(meal_plan_id__user_id=self.kwargs['user_id']).filter(meal_plan_id=self.kwargs['meal_template_id'])
     if queryset:
       return queryset
     else:
