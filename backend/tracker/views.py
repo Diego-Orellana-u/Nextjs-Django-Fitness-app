@@ -2,27 +2,30 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.pagination import PageNumberPagination
 from .exceptions import NoContentException
 from .models import FoodItem, NutritionGoal, DailyFoodLog, ConsumedItem, MealTemplate, TemplateItem
 from .serializers import ProductSerializer, NutriGoalsSerializer, DailyFoodLogSerializer, ConsumedItemsSerializer, MealTemplatesSerializer, TemplateItemSerializer
-from .filters import ProductFilter
+from .filters import ProductFilter, NutritionGoalFilter
 
 
 class ProductsViewSet(ModelViewSet):
-
   queryset = FoodItem.objects.all()
   serializer_class = ProductSerializer
+
   filter_backends = [SearchFilter, DjangoFilterBackend, OrderingFilter]
   search_fields = ['name', 'brand']
   filterset_class = ProductFilter
-  pagination_class = PageNumberPagination
   ordering_fields = ['protein_per_100g', 'calories_per_100g']
-
 
 class NutritionGoalViewSet(ModelViewSet):
   queryset = NutritionGoal.objects.all()
   serializer_class = NutriGoalsSerializer
+  
+  filter_backends = [SearchFilter, DjangoFilterBackend, OrderingFilter]
+  search_fields = ['name']
+  filterset_class = NutritionGoalFilter
+  ordering_fields = ['target_calories', 'start_date']
+
 
 class DailyFoodLogViewSet(ModelViewSet):
   queryset = DailyFoodLog.objects.all()
