@@ -23,7 +23,7 @@ class ConsumedItemsSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = ConsumedItem
-    fields = ['log', 'product', 'serving_quantity', 'serving_unit', 'time_of_day', 'created_at', 'calories_consumed', 'carbs_consumed', 'proteins_consumed', 'fats_consumed']
+    fields = ['id','log_id', 'product_id', 'serving_quantity', 'serving_unit', 'time_of_day', 'calories_consumed', 'carbs_consumed', 'proteins_consumed', 'fats_consumed', 'created_at']
 
 
 class MealTemplatesSerializer(serializers.ModelSerializer):

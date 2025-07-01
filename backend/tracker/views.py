@@ -17,6 +17,7 @@ class ProductsViewSet(ModelViewSet):
   filterset_class = ProductFilter
   ordering_fields = ['protein_per_100g', 'calories_per_100g']
 
+
 class NutritionGoalViewSet(ModelViewSet):
   queryset = NutritionGoal.objects.all()
   serializer_class = NutriGoalsSerializer
@@ -30,23 +31,30 @@ class NutritionGoalViewSet(ModelViewSet):
 class DailyFoodLogViewSet(ModelViewSet):
   queryset = DailyFoodLog.objects.all()
   serializer_class = DailyFoodLogSerializer
+  filter_backends = [OrderingFilter]
+  ordering_fields = ['date']
 
-class ConsumedItemsByDailyLogId(ListCreateAPIView):
-  def get_queryset(self):
-    return ConsumedItem.objects.filter(log_id=self.kwargs['log_id'])
 
+class ConsumedItemsViewSet(ModelViewSet):
+  queryset = ConsumedItem.objects.all()
   serializer_class = ConsumedItemsSerializer
 
-class ConsumedItemById(RetrieveUpdateDestroyAPIView):
-  lookup_field = 'id'
-  def get_queryset(self):
-    consumed_item = ConsumedItem.objects.filter(id=self.kwargs['id'])
-    if consumed_item:
-      return consumed_item
-    else: 
-      raise NoContentException
+# class ConsumedItemsByDailyLogId(ListCreateAPIView):
+#   def get_queryset(self):
+#     return ConsumedItem.objects.filter(log_id=self.kwargs['log_id'])
+
+#   serializer_class = ConsumedItemsSerializer
+
+# class ConsumedItemById(RetrieveUpdateDestroyAPIView):
+#   lookup_field = 'id'
+#   def get_queryset(self):
+#     consumed_item = ConsumedItem.objects.filter(id=self.kwargs['id'])
+#     if consumed_item:
+#       return consumed_item
+#     else: 
+#       raise NoContentException
   
-  serializer_class = ConsumedItemsSerializer
+#   serializer_class = ConsumedItemsSerializer
 
 class MealTemplateByUserId(ListCreateAPIView):
   def get_queryset(self):
