@@ -39,22 +39,6 @@ class ConsumedItemsViewSet(ModelViewSet):
   queryset = ConsumedItem.objects.all()
   serializer_class = ConsumedItemsSerializer
 
-# class ConsumedItemsByDailyLogId(ListCreateAPIView):
-#   def get_queryset(self):
-#     return ConsumedItem.objects.filter(log_id=self.kwargs['log_id'])
-
-#   serializer_class = ConsumedItemsSerializer
-
-# class ConsumedItemById(RetrieveUpdateDestroyAPIView):
-#   lookup_field = 'id'
-#   def get_queryset(self):
-#     consumed_item = ConsumedItem.objects.filter(id=self.kwargs['id'])
-#     if consumed_item:
-#       return consumed_item
-#     else: 
-#       raise NoContentException
-  
-#   serializer_class = ConsumedItemsSerializer
 
 class MealTemplateByUserId(ListCreateAPIView):
   def get_queryset(self):
