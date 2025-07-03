@@ -1,5 +1,5 @@
 import django_filters
-from .models import FoodItem, NutritionGoal, DailyFoodLog
+from .models import FoodItem, NutritionGoal, ConsumedItem
 
 class ProductFilter(django_filters.FilterSet):
   protein_gte = django_filters.NumberFilter(field_name='protein_per_100g', lookup_expr='gte')
@@ -14,3 +14,9 @@ class NutritionGoalFilter(django_filters.FilterSet):
     model = NutritionGoal
     fields = []
 
+class ConsumedItemsFilter(django_filters.FilterSet):
+  log = django_filters.NumberFilter(lookup_expr='exact')
+
+  class Meta:
+    model = ConsumedItem
+    fields = []

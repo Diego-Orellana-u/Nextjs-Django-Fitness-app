@@ -5,7 +5,7 @@ from rest_framework.viewsets import ModelViewSet
 from .exceptions import NoContentException
 from .models import FoodItem, NutritionGoal, DailyFoodLog, ConsumedItem, MealTemplate, TemplateItem
 from .serializers import ProductSerializer, NutriGoalsSerializer, DailyFoodLogSerializer, ConsumedItemsSerializer, MealTemplatesSerializer, TemplateItemSerializer
-from .filters import ProductFilter, NutritionGoalFilter
+from .filters import ProductFilter, NutritionGoalFilter, ConsumedItemsFilter
 
 
 class ProductsViewSet(ModelViewSet):
@@ -39,6 +39,8 @@ class ConsumedItemsViewSet(ModelViewSet):
   queryset = ConsumedItem.objects.all()
   serializer_class = ConsumedItemsSerializer
 
+  filter_backends = [DjangoFilterBackend]
+  filterset_class = ConsumedItemsFilter
 
 class MealTemplateByUserId(ListCreateAPIView):
   def get_queryset(self):
