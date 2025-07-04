@@ -5,7 +5,7 @@ from rest_framework.viewsets import ModelViewSet
 from .exceptions import NoContentException
 from .models import FoodItem, NutritionGoal, DailyFoodLog, ConsumedItem, MealTemplate, TemplateItem
 from .serializers import ProductSerializer, NutriGoalsSerializer, DailyFoodLogSerializer, ConsumedItemsSerializer, MealTemplatesSerializer, TemplateItemSerializer
-from .filters import ProductFilter, NutritionGoalFilter, ConsumedItemsFilter
+from .filters import ProductFilter, NutritionGoalFilter, ConsumedItemsFilter, MealTemplatesFilter
 
 
 class ProductsViewSet(ModelViewSet):
@@ -39,30 +39,16 @@ class ConsumedItemsViewSet(ModelViewSet):
   queryset = ConsumedItem.objects.all()
   serializer_class = ConsumedItemsSerializer
 
-  filter_backends = [DjangoFilterBackend]
+  filter_backends = [DjangoFilterBackend, OrderingFilter]
   filterset_class = ConsumedItemsFilter
+  ordering_fields = ['created_at', 'calories_consumed', 'proteins_consumed']
 
-class MealTemplateByUserId(ListCreateAPIView):
-  def get_queryset(self):
-    mealTemplates = MealTemplate.objects.filter(user_id=self.kwargs['user_id'])
-    if mealTemplates:
-      return mealTemplates
-    else:
-      raise NoContentException
-    
+class MealTemplatesViewSet(ModelViewSet):
+  queryset = MealTemplate.objects.all()
   serializer_class = MealTemplatesSerializer
+  filter_backends = [DjangoFilterBackend]
+  filterset_class = MealTemplatesFilter
 
-class MealTemplateById(RetrieveUpdateDestroyAPIView):
-  lookup_field = 'user_id'
-
-  def get_queryset(self):
-    mealTemplate = MealTemplate.objects.filter(user_id=self.kwargs['user_id'], pk=self.kwargs['meal_id'])
-    if MealTemplate:
-      return mealTemplate
-    else:
-      raise NoContentException
-  
-  serializer_class = MealTemplatesSerializer
 
 class TemplateProductsByMealTemplateId(ListCreateAPIView):
   def get_queryset(self):
