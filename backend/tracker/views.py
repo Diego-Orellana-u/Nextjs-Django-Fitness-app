@@ -12,7 +12,7 @@ class ProductsViewSet(ModelViewSet):
   queryset = FoodItem.objects.all()
   serializer_class = ProductSerializer
 
-  filter_backends = [SearchFilter, DjangoFilterBackend, OrderingFilter]
+  filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
   search_fields = ['name', 'brand']
   filterset_class = ProductFilter
   ordering_fields = ['protein_per_100g', 'calories_per_100g']
@@ -22,7 +22,7 @@ class NutritionGoalViewSet(ModelViewSet):
   queryset = NutritionGoal.objects.all()
   serializer_class = NutriGoalsSerializer
   
-  filter_backends = [SearchFilter, DjangoFilterBackend, OrderingFilter]
+  filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
   search_fields = ['name']
   filterset_class = NutritionGoalFilter
   ordering_fields = ['target_calories', 'start_date']
@@ -46,27 +46,11 @@ class ConsumedItemsViewSet(ModelViewSet):
 class MealTemplatesViewSet(ModelViewSet):
   queryset = MealTemplate.objects.all()
   serializer_class = MealTemplatesSerializer
-  filter_backends = [DjangoFilterBackend]
+  filter_backends = [DjangoFilterBackend, SearchFilter]
   filterset_class = MealTemplatesFilter
 
 
-class TemplateProductsByMealTemplateId(ListCreateAPIView):
-  def get_queryset(self):
-    queryset = TemplateItem.objects.filter(meal_plan_id__user_id=self.kwargs['user_id']).filter(meal_plan_id=self.kwargs['meal_template_id'])
-    if queryset:
-      return queryset
-    else:
-      raise NoContentException()
-  
+class TemplateProductViewSet(ModelViewSet):
+  queryset = TemplateItem.objects.all()
   serializer_class = TemplateItemSerializer
 
-class TemplateProductById(RetrieveUpdateDestroyAPIView):
-  lookup_field = 'id'
-  def get_queryset(self):
-    queryset = TemplateItem.objects.filter(meal_plan_id__user_id=self.kwargs['user_id']).filter(meal_plan_id=self.kwargs['meal_template_id'])
-    if queryset:
-      return queryset
-    else:
-      raise NoContentException()
-  
-  serializer_class = TemplateItemSerializer
