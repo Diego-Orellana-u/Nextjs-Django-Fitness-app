@@ -1,11 +1,10 @@
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.viewsets import ModelViewSet
-from .exceptions import NoContentException
+from django_filters.rest_framework import DjangoFilterBackend
 from .models import FoodItem, NutritionGoal, DailyFoodLog, ConsumedItem, MealTemplate, TemplateItem
 from .serializers import ProductSerializer, NutriGoalsSerializer, DailyFoodLogSerializer, ConsumedItemsSerializer, MealTemplatesSerializer, TemplateItemSerializer
 from .filters import ProductFilter, NutritionGoalFilter, ConsumedItemsFilter, MealTemplatesFilter, TemplateProductFilter
+from .pagination import SmallResultsPagination
 
 
 class ProductsViewSet(ModelViewSet):
