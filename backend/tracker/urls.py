@@ -15,9 +15,5 @@ router.register('templateproducts', views.TemplateProductViewSet)
 
 urlpatterns = [
   path('', include(router.urls)),
-
-  # Endpoints to the list of products (or individual product) related to a meal template
-  # path('templateproducts/<int:user_id>/<int:meal_template_id>', views.TemplateProductsByMealTemplateId.as_view()),
-  # path('templateproducts/<int:user_id>/<int:meal_template_id>/<int:id>', views.TemplateProductById.as_view()),
 ]
 

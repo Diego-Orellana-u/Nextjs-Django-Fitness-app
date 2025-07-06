@@ -1,5 +1,5 @@
 import django_filters
-from .models import FoodItem, NutritionGoal, ConsumedItem, MealTemplate, MEAL_TIMES
+from .models import FoodItem, NutritionGoal, ConsumedItem, MealTemplate, TemplateItem, MEAL_TIMES
 
 class ProductFilter(django_filters.FilterSet):
   protein_gte = django_filters.NumberFilter(field_name='protein_per_100g', lookup_expr='gte')
@@ -15,7 +15,7 @@ class NutritionGoalFilter(django_filters.FilterSet):
     fields = []
 
 class ConsumedItemsFilter(django_filters.FilterSet):
-  log = django_filters.NumberFilter(lookup_expr='exact')
+  log = django_filters.NumberFilter()
   time_of_day = django_filters.ChoiceFilter(choices=MEAL_TIMES)
 
   class Meta:
@@ -27,4 +27,11 @@ class MealTemplatesFilter(django_filters.FilterSet):
 
   class Meta:
     model = MealTemplate
+    fields = []
+
+class TemplateProductFilter(django_filters.FilterSet):
+  meal_plan = django_filters.NumberFilter()
+
+  class Meta:
+    model = TemplateItem
     fields = []
