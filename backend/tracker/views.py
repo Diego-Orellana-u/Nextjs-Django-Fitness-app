@@ -55,3 +55,4 @@ class TemplateProductViewSet(ModelViewSet):
 
   filter_backends = [DjangoFilterBackend]
   filterset_class = TemplateProductFilter
+  pagination_class = SmallResultsPagination
